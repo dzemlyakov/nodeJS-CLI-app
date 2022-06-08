@@ -1,12 +1,13 @@
 import readline from "readline";
 import { chdir, cwd } from "process";
-import os from "os";
+import {EOL,arch,homedir,cpus, userInfo} from "os";
+
 import { readdir } from "fs/promises";
 
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 
-const homedir = os.homedir();
+const homeDir = homedir();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,16 +33,26 @@ const cd = (pathToDir) => {
     chdir(newDir)
 }
 
+const getOSComand = (comand) =>{
+const comandsObj = {
+    'EOL': EOL,
+    'cpus': cpus(),
+    'homedir': homedir(),
+    'architecture': arch(),
+    'username': userInfo().username 
+}
+return console.log(comandsObj[comand],EOL)
+}
 const userName = process.argv.slice(-1).join("").split("=").slice(-1).join("");
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-process.chdir(homedir);
+process.chdir(homeDir);
 
 rl.question(
-  `Welcome to the File Manager, ${userName}!\n\nYou are currently in ${homedir}\n`,
+  `Welcome to the File Manager, ${userName}!\n\nYou are currently in ${homeDir}\n`,
   (answer) => {
     console.log(`Ok, ${userName}`);
   }
@@ -64,6 +75,14 @@ rl.on("line", (answer) => {
       answer = answer.split(' ').slice(-1).join('')
         cd(answer);
       console.log(`You are currently in: ${cwd()}`);
+    }
+  });
+  rl.on("line", (answer) => {
+    if (answer.startsWith("os")) {
+      answer = answer.split(' ').slice(-1).join('').split('--').join('')
+      getOSComand(answer)
+    //     cd(answer);
+    //   console.log(`You are currently in: ${cwd()}`);
     }
   });
 
