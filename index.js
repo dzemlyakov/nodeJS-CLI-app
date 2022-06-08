@@ -21,11 +21,16 @@ const list = async (dir) => {
     console.error(err);
   }
 };
+
 const up = (current) => {
   let levelUp = path.join(current, "../");
   chdir(levelUp);
   return cwd();
 };
+const cd = (pathToDir) => {
+    let newDir = path.join(cwd(), pathToDir)
+    chdir(newDir)
+}
 
 const userName = process.argv.slice(-1).join("").split("=").slice(-1).join("");
 
@@ -51,9 +56,16 @@ rl.on("line", (answer) => {
 rl.on("line", (answer) => {
   if (answer.startsWith("up")) {
     up(cwd());
-    console.log(`New directory: ${cwd()}`);
+    console.log(`You are currently in: ${cwd()}`);
   }
 });
+rl.on("line", (answer) => {
+    if (answer.startsWith("cd")) {
+      answer = answer.split(' ').slice(-1).join('')
+        cd(answer);
+      console.log(`You are currently in: ${cwd()}`);
+    }
+  });
 
 rl.on("close", () => {
   console.log(`\nThank you for using File Manager, ${userName}\n`);
