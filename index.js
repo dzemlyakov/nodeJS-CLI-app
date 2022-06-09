@@ -1,8 +1,7 @@
 import readline from "readline";
 import { chdir, cwd } from "process";
 import { EOL, arch, homedir, cpus, userInfo } from "os";
-import {createReadStream,createWriteStream } from "fs";
-
+import { createReadStream, createWriteStream, rm } from "fs";
 
 import { readdir } from "fs/promises";
 
@@ -46,27 +45,52 @@ const getOSComand = (comand) => {
   return console.log(comandsObj[comand], EOL);
 };
 
+const read = (filename) => {
+  const rs = createReadStream(filename);
+  rs.on("data", (chunk) => {
+    console.log(chunk.toString());
+  }).on("error", (e) => {
+    console.log(e.message);
+  });
+};
 
-const read = (filename) =>{
-   const rs = createReadStream(filename)
-   rs.on('data', (chunk) => {
-       console.log(chunk.toString());
-   })
-   .on('error', (e) => {
-       console.log(e.message);
-   }) 
-}
+const create = (filename) => {
+  const ws = createWriteStream(filename);
+  ws.on("finish", () => {
+    console.log("file has written");
+  }).on("error", (e) => {
+    console.log(e.message);
+  });
+  ws.end();
+};
+const copy = ([src, dest]) => {
+  const rs = createReadStream(src);
+  const ws = createWriteStream(dest);
 
-const create = (filename) =>{
-    const ws = createWriteStream(filename)
-    ws.on('finish', ()=>{
-        console.log('file has written');
+  rs.on("end", () => {
+    console.log("file has been copied");
+  })
+    .pipe(ws)
+    .on("error", (e) => {
+      console.log(e.message);
+    });
+};
+
+const move = ([src, dest]) => {
+    const rs = createReadStream(src);
+    const ws = createWriteStream(dest);
+  
+    rs.on("close", () => {
+      rm(src, ()=>{
+        console.log("file has been moved");
+      })
+        
     })
-    .on('error', (e) => {
+      .pipe(ws)
+      .on("error", (e) => {
         console.log(e.message);
-    }) 
-    ws.end()
- }
+      });
+  };
 const userName = process.argv.slice(-1).join("").split("=").slice(-1).join("");
 
 const rl = readline.createInterface({
@@ -109,18 +133,46 @@ rl.on("line", (answer) => {
 });
 
 rl.on("line", (answer) => {
-    if (answer.startsWith("cat")) {
-      answer = answer.split(" ").slice(-1).join("");
-      const pathToFile= path.join(cwd(), answer)
-      read(pathToFile)
-    }
-  });
+  if (answer.startsWith("cat")) {
+    answer = answer.split(" ").slice(-1).join("");
+    const pathToFile = path.join(cwd(), answer);
+    read(pathToFile);
+  }
+});
 
-  rl.on("line", (answer) => {
-    if (answer.startsWith("add")) {
-      answer = answer.split(" ").slice(-1).join("");
-      const pathToFile= path.join(cwd(), answer)
-      create(pathToFile)
+rl.on("line", (answer) => {
+  if (answer.startsWith("add")) {
+    answer = answer.split(" ").slice(-1).join("");
+    const pathToFile = path.join(cwd(), answer);
+    create(pathToFile);
+  }
+});
+
+rl.on("line", (answer) => {
+  if (answer.startsWith("cp")) {
+    answer = answer
+      .split(" ")
+      .slice(-2)
+
+      .map((elem) => {
+        return path.join(cwd(), elem);
+      });
+
+    copy(answer);
+  }
+});
+
+rl.on("line", (answer) => {
+    if (answer.startsWith("mv")) {
+      answer = answer
+        .split(" ")
+        .slice(-2)
+  
+        .map((elem) => {
+          return path.join(cwd(), elem);
+        });
+  
+      move(answer);
     }
   });
 
