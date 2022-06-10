@@ -1,9 +1,9 @@
 import readline from "readline";
 import { chdir, cwd } from "process";
 import { EOL, arch, homedir, cpus, userInfo } from "os";
-import { createReadStream, createWriteStream, rm } from "fs";
+import { createReadStream, createWriteStream } from "fs";
 
-import { readdir } from "fs/promises";
+import { readdir, rename, rm } from "fs/promises";
 
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
@@ -14,6 +14,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const dirPath = path.join(__dirname);
 
+const userCommandsObj={
+    'cat': read(),
+    'add': create(),
+    'rn': renameFile(),
+    'cp': copy(),
+    'mv': move(),
+    'rm': removeFile()
+}
 const list = async (dir) => {
   try {
     const files = await readdir(dir);
@@ -30,8 +38,20 @@ const up = (current) => {
   return cwd();
 };
 const cd = (pathToDir) => {
-  let newDir = path.join(cwd(), pathToDir);
-  chdir(newDir);
+  if (!pathToDir) {
+    console.log("Invalid input");
+  } else {
+    try {
+      if (path.isAbsolute(pathToDir)) {
+        chdir(pathToDir);
+      } else {
+        let newDir = path.join(cwd(), pathToDir);
+        chdir(newDir);
+      }
+    } catch (err) {
+      if (err.code === "ENOENT") console.log("no such file or directory");
+    }
+  }
 };
 
 const getOSComand = (comand) => {
@@ -77,20 +97,35 @@ const copy = ([src, dest]) => {
 };
 
 const move = ([src, dest]) => {
-    const rs = createReadStream(src);
-    const ws = createWriteStream(dest);
-  
-    rs.on("close", () => {
-      rm(src, ()=>{
-        console.log("file has been moved");
-      })
-        
-    })
-      .pipe(ws)
-      .on("error", (e) => {
-        console.log(e.message);
-      });
-  };
+  const rs = createReadStream(src);
+  const ws = createWriteStream(dest);
+
+  rs.on("close", () => {
+    rm(src);
+    console.log("file has been moved");
+  })
+    .pipe(ws)
+    .on("error", (e) => {
+      console.log(e.message);
+    });
+};
+const renameFile = ([oldPath, newPath]) => {
+  try {
+    rename(oldPath, newPath);
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+const removeFile = (filename) =>{
+    try {
+        rm(filename)
+        console.log('file has been removed');
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
 const userName = process.argv.slice(-1).join("").split("=").slice(-1).join("");
 
 const rl = readline.createInterface({
@@ -148,12 +183,13 @@ rl.on("line", (answer) => {
   }
 });
 
+
+
 rl.on("line", (answer) => {
   if (answer.startsWith("cp")) {
     answer = answer
       .split(" ")
       .slice(-2)
-
       .map((elem) => {
         return path.join(cwd(), elem);
       });
@@ -163,16 +199,35 @@ rl.on("line", (answer) => {
 });
 
 rl.on("line", (answer) => {
-    if (answer.startsWith("mv")) {
-      answer = answer
-        .split(" ")
-        .slice(-2)
-  
-        .map((elem) => {
-          return path.join(cwd(), elem);
-        });
-  
-      move(answer);
+  if (answer.startsWith("mv")) {
+    answer = answer
+      .split(" ")
+      .slice(-2)
+      .map((elem) => {
+        return path.join(cwd(), elem);
+      });
+
+    move(answer);
+  }
+});
+
+rl.on("line", (answer) => {
+  if (answer.startsWith("rn")) {
+    answer = answer
+      .split(" ")
+      .slice(-2)
+      .map((elem) => {
+        return path.join(cwd(), elem);
+      });
+
+    renameFile(answer);
+  }
+});
+rl.on("line", (answer) => {
+    if (answer.startsWith("rm")) {
+      answer = answer.split(" ").slice(-1).join("");
+      const pathToFile = path.join(cwd(), answer);
+      removeFile(pathToFile);
     }
   });
 
