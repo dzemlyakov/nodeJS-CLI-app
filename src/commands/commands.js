@@ -1,6 +1,9 @@
-import {list, up, cd, read, create, copy, move, renameFile, removeFile,
-} from "./functions.js";
+import { cd } from "../functions/nwd.js"
+import { read, create } from "../functions/basicFSOperations.js";
+import { calculateHash } from "../functions/hashCalc.js";
+
 import { EOL, arch, homedir, cpus, userInfo } from "os";
+
 export const allCommands = {
     "withoutArgs": ["up", "ls"],
     "os": ["os"],
@@ -20,6 +23,6 @@ export const onePathCommandsObj = {
   "cd":cd, 
   "cat":read, 
   "add":create, 
-  //"hash":
+  "hash":calculateHash
 
 }  

@@ -2,7 +2,7 @@ import readline from "readline";
 import { chdir, cwd, stdin, stdout } from "process";
 import { EOL, homedir } from "os";
 
-import { inputHandler, pathHandlerforOnePath, pathHandlerforTwoPath, argsHandlerForOs, handlerWithoutArgs } from "./handlers.js";
+import { inputHandler, pathHandlerforOnePath, pathHandlerforTwoPath, argsHandlerForOs, handlerWithoutArgs } from "./handlers/handlers.js";
 
 const homeDir = homedir();
 

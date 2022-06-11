@@ -1,19 +1,9 @@
-import {
-  list,
-  up,
-  cd,
-  read,
-  create,
-  copy,
-  move,
-  renameFile,
-  removeFile,
-} from "./functions.js";
-import { getOSCommand, getOnePathCommand } from "./getters.js";
-import path, { dirname } from "path";
+import { list, up } from "../functions/nwd.js";
+import { getOSCommand, getOnePathCommand } from "../getters/getters.js";
+import path from "path";
 import { chdir, cwd } from "process";
-import { allCommands } from "./commands.js";
-import { INVALID_INPUT, OPERATION_FAILED } from "./errors.js";
+import { allCommands } from "../commands/commands.js";
+import { INVALID_INPUT, OPERATION_FAILED } from "../errors/errors.js";
 
 export const inputHandler = (answer) => {
   let firstElement = answer.split(" ")[0].trim();
@@ -46,7 +36,7 @@ export const pathHandlerforOnePath = (pathTo) => {
     return getOnePathCommand(command, pathToFile);
   
 } catch (err) {
-    if (err.code === "ENOENT") console.log("no such file or directory");
+    if (err.code === "ENOENT") console.log(OPERATION_FAILED+NO_SUCH_FILE);
   }
 };
 

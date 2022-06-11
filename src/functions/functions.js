@@ -6,40 +6,10 @@ import { chdir, cwd } from "process";
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 
-import { INVALID_INPUT, OPERATION_FAILED } from "./errors.js";
+import { INVALID_INPUT, OPERATION_FAILED } from "../errors/errors.js";
 
 
-export const list = async(dir) => {
-    try {
-    let filenames = await readdir(dir)
-    return filenames
-  } catch (err) {
-    console.error(err);
-  }
-};
 
-export const up = (current) => {
-  if(current === '/Users'){
-    chdir(current);
-  }else {
-    let levelUp = path.join(current, "../");
-    chdir(levelUp);
-  }
-   
-  return cwd();
-};
-
- 
-export const cd = (pathToDir) => {
-    try {
-        chdir(pathToDir);
-        console.log(`You are currently in: ${cwd()}`);
-      } 
-     catch (err) {
-      if (err.code === "ENOENT") console.log(OPERATION_FAILED,"no such file or directory");
-    }
-  
-}
   
 export const read = (filename) => {
                 console.log('from read');
