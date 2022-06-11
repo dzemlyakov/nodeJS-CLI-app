@@ -32,7 +32,7 @@ rl.on("line", async(answer) => {
       pathHandlerforOnePath(answer);
       break;
     case "twoPath":
-      console.log(pathHandlerforTwoPath(answer));
+      pathHandlerforTwoPath(answer);
       break;
     case "withoutArgs":
        console.log(await handlerWithoutArgs(answer));

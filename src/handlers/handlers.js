@@ -1,7 +1,8 @@
-import { list, up } from "../functions/nwd.js";
-import { getOSCommand, getOnePathCommand } from "../getters/getters.js";
-import path from "path";
 import { chdir, cwd } from "process";
+import path from "path";
+
+import { list, up } from "../functions/nwd.js";
+import { getOSCommand, getOnePathCommand, getTwoPathCommand } from "../getters/getters.js";
 import { allCommands } from "../commands/commands.js";
 import { INVALID_INPUT, OPERATION_FAILED } from "../errors/errors.js";
 
@@ -22,9 +23,9 @@ export const inputHandler = (answer) => {
   }
 };
 
-export const pathHandlerforOnePath = (pathTo) => {
-  let arr = pathTo.trim().split(" ");
-  let [command, pathToFile] = arr;
+export const pathHandlerforOnePath = (answerFromUser) => {
+  let arrOfCommands = answerFromUser.trim().split(" ");
+  let [command, pathToFile] = arrOfCommands;
   
   try {
     if (!path.isAbsolute(pathToFile)) {
@@ -40,9 +41,27 @@ export const pathHandlerforOnePath = (pathTo) => {
   }
 };
 
-export const pathHandlerforTwoPath = (arrPaths) => {
-  return arrPaths.map((path) => pathHandlerforOnePath(path));
+export const pathHandlerforTwoPath = (answerFromUser) => {
+  let arrOfCommands = answerFromUser.trim().split(" ");
+  if (!arrOfCommands ||arrOfCommands.length !== 3) console.log(INVALID_INPUT);
+
+  let [command, ...rest] = arrOfCommands;
+
+  let paths = rest.map((pathToFile)=> {
+    if (!path.isAbsolute(pathToFile)) {
+      return pathToFile = path.join(cwd(), pathToFile);
+    } else {
+      return pathToFile = pathToFile;
+    }
+  })
+  
+ 
+  
+  return getTwoPathCommand(command, paths);
+  
+  
 };
+
 
 export const argsHandlerForOs = (args) => {
   args = args.split(" ").slice(-1).join("");

@@ -3,22 +3,25 @@ import { readdir, rename, rm } from "fs/promises";
 import { chdir, cwd } from "process";
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
-import { INVALID_INPUT, OPERATION_FAILED, NO_SUCH_FILE } from "../errors/errors.js";
+import {
+  INVALID_INPUT,
+  OPERATION_FAILED,
+  NO_SUCH_FILE,
+} from "../errors/errors.js";
 
+export const read = (filename) => {
+  const rs = createReadStream(filename);
 
-export const read = (filename) => {             
-const rs = createReadStream(filename);
-  
   rs.on("data", (chunk) => {
     console.log(chunk.toString());
   }).on("error", (e) => {
-    console.log(OPERATION_FAILED+NO_SUCH_FILE);
+    console.log(OPERATION_FAILED + NO_SUCH_FILE);
   });
 };
 
 export const create = (filename) => {
   const ws = createWriteStream(filename);
-  
+
   ws.on("finish", () => {
     console.log(`file has written: ${filename}`);
   }).on("error", (e) => {
@@ -32,11 +35,11 @@ export const copy = ([src, dest]) => {
   const ws = createWriteStream(dest);
 
   rs.on("end", () => {
-    console.log("file has been copied");
+    console.log(`file: ${src} has been copied here: ${dest}`);
   })
     .pipe(ws)
-    .on("error", (e) => {
-      console.log(e.message);
+    .on("error", () => {
+      console.log(OPERATION_FAILED+NO_SUCH_FILE);
     });
 };
 
@@ -45,12 +48,15 @@ export const move = ([src, dest]) => {
   const ws = createWriteStream(dest);
 
   rs.on("close", () => {
-    rm(src);
-    console.log("file has been moved");
+    rm(src)
+    .then(()=>{
+        console.log("file has been moved");
+    })
+    .catch(() => console.log(OPERATION_FAILED+NO_SUCH_FILE))
   })
     .pipe(ws)
-    .on("error", (e) => {
-      console.log(e.message);
+    .on("error", () => {
+      console.log(OPERATION_FAILED);
     });
 };
 
@@ -63,11 +69,9 @@ export const renameFile = ([oldPath, newPath]) => {
 };
 
 export const removeFile = (filename) => {
-  try {
-    rm(filename);
-    console.log("file has been removed");
-  } catch (err) {
-    console.log(err.message);
-  }
+  rm(filename)
+    .then(() => {
+      console.log(`file: ${filename} has been removed`);
+    })
+    .catch(() => console.log(OPERATION_FAILED + NO_SUCH_FILE));
 };
-
