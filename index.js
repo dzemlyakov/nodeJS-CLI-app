@@ -29,7 +29,7 @@ rl.on("line", async(answer) => {
       console.log(argsHandlerForOs(answer));
       break;
     case "onePath":
-      console.log(pathHandlerforOnePath(answer));
+      pathHandlerforOnePath(answer);
       break;
     case "twoPath":
       console.log(pathHandlerforTwoPath(answer));

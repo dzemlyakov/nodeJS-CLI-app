@@ -2,9 +2,12 @@ import { createReadStream, createWriteStream } from "fs";
 import { readdir, rename, rm } from "fs/promises";
 import { chdir, cwd } from "process";
 
+
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
-import { osCommandsObj} from "./commands.js";
+
+import { INVALID_INPUT, OPERATION_FAILED } from "./errors.js";
+
 
 export const list = async(dir) => {
     try {
@@ -26,30 +29,21 @@ export const up = (current) => {
   return cwd();
 };
 
+ 
 export const cd = (pathToDir) => {
-  if (!pathToDir) {
-    console.log("Invalid input");
-  } else {
     try {
-      if (path.isAbsolute(pathToDir)) {
         chdir(pathToDir);
-      } else {
-        let newDir = path.join(cwd(), pathToDir);
-        chdir(newDir);
-      }
-    } catch (err) {
-      if (err.code === "ENOENT") console.log("no such file or directory");
+        console.log(`You are currently in: ${cwd()}`);
+      } 
+     catch (err) {
+      if (err.code === "ENOENT") console.log(OPERATION_FAILED,"no such file or directory");
     }
-  }
-};
-
-export const getOSCommand = (command) => {
   
-  return osCommandsObj[command];
-};
-
+}
+  
 export const read = (filename) => {
-  const rs = createReadStream(filename);
+                console.log('from read');
+          const rs = createReadStream(filename);
   rs.on("data", (chunk) => {
     console.log(chunk.toString());
   }).on("error", (e) => {
@@ -110,3 +104,4 @@ export const removeFile = (filename) => {
     console.log(err.message);
   }
 };
+

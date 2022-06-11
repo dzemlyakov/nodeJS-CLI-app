@@ -1,3 +1,5 @@
+import {list, up, cd, read, create, copy, move, renameFile, removeFile,
+} from "./functions.js";
 import { EOL, arch, homedir, cpus, userInfo } from "os";
 export const allCommands = {
     "withoutArgs": ["up", "ls"],
@@ -13,3 +15,11 @@ export const osCommandsObj = {
     architecture: arch(),
     username: userInfo().username,
   };  
+
+export const onePathCommandsObj = {
+  "cd":cd, 
+  "cat":read, 
+  "add":create, 
+  //"hash":
+
+}  
