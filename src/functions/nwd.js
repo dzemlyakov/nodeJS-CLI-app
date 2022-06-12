@@ -1,36 +1,33 @@
 import { readdir } from "fs/promises";
-import { chdir, cwd } from "process";
+import { chdir } from "process";
 import path from "path";
-import { INVALID_INPUT, OPERATION_FAILED, NO_SUCH_FILE } from "../errors/errors.js";
+import { OPERATION_FAILED, NO_SUCH_FILE } from "../errors/errors.js";
+import { pwdForUser } from "../userInfo/userCLI.js";
 
 export const list = async(dir) => {
     try {
     let filenames = await readdir(dir)
-    return filenames
+     console.log(filenames);
   } catch (err) {
-    console.error(err);
+    console.log(OPERATION_FAILED)
   }
 };
 
 export const up = (current) => {
   if(current === path.parse(current).root){
-    chdir(current);
+   return chdir(current);
   }else {
     let levelUp = path.join(current, "../");
-    chdir(levelUp);
-  }
-   
-  return cwd();
+   return chdir(levelUp);
+  }  
 };
 
- 
 export const cd = (pathToDir) => {
     try {
         chdir(pathToDir);
-        console.log(`You are currently in: ${cwd()}`);
+        pwdForUser()
       } 
      catch (err) {
       if (err.code === "ENOENT") console.log(OPERATION_FAILED+NO_SUCH_FILE);
     }
-  
 }

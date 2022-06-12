@@ -33,9 +33,7 @@ export const pathHandlerforOnePath = (answerFromUser) => {
     } else {
       pathToFile = pathToFile;
     }
-
     return getOnePathCommand(command, pathToFile);
-  
 } catch (err) {
     if (err.code === "ENOENT") console.log(OPERATION_FAILED+NO_SUCH_FILE);
   }
@@ -43,7 +41,7 @@ export const pathHandlerforOnePath = (answerFromUser) => {
 
 export const pathHandlerforTwoPath = (answerFromUser) => {
   let arrOfCommands = answerFromUser.trim().split(" ");
-  if (!arrOfCommands ||arrOfCommands.length !== 3) console.log(INVALID_INPUT);
+  if (!arrOfCommands || arrOfCommands.length !== 3) console.log(INVALID_INPUT);
 
   let [command, ...rest] = arrOfCommands;
 
@@ -54,12 +52,7 @@ export const pathHandlerforTwoPath = (answerFromUser) => {
       return pathToFile = pathToFile;
     }
   })
-  
- 
-  
   return getTwoPathCommand(command, paths);
-  
-  
 };
 
 
@@ -76,23 +69,3 @@ export const argsHandlerForOs = (args) => {
 export const handlerWithoutArgs = async (answer) => {
   return answer.trim() === "ls" ? list(cwd()) : up(cwd());
 };
-
-// export const pathHandlerforOnePath = (pathTo) => {
-//     let arr = pathTo.trim().split(' ')
-
-//       let [command, pathToFile] = arr
-//    // console.log( pathToFile, 'from input');
-//       try {
-//         if (!path.isAbsolute(pathToFile)) {
-//           pathToFile = path.join(cwd(), pathToFile);
-//           //console.log(pathToFile, 'pathTofile');
-//         } else {
-//            pathToFile = pathToFile
-//         }
-
-//         //console.log(command.trim(), pathToFile, 'from handler');
-//         return getOnePathCommand(command, pathToFile)
-//       } catch (err) {
-//         if (err.code === "ENOENT") console.log("no such file or directory");
-//       }
-//   };
