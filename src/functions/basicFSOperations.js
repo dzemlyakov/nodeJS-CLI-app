@@ -2,7 +2,7 @@ import { createReadStream, createWriteStream } from "fs";
 import { readdir, rename, rm } from "fs/promises";
 import { chdir, cwd } from "process";
 import { fileURLToPath } from "url";
-import path, { dirname } from "path";
+import  { parse } from "path";
 import {
   INVALID_INPUT,
   OPERATION_FAILED,
@@ -23,7 +23,7 @@ export const create = (filename) => {
   const ws = createWriteStream(filename);
 
   ws.on("finish", () => {
-    console.log(`file has written: ${filename}`);
+    console.log(`file:${parse(filename).base} was created here:${filename}`);
   }).on("error", (e) => {
     console.log(OPERATION_FAILED);
   });
@@ -35,7 +35,7 @@ export const copy = ([src, dest]) => {
   const ws = createWriteStream(dest);
 
   rs.on("end", () => {
-    console.log(`file: ${src} has been copied here: ${dest}`);
+    console.log(`file: ${parse(src).base} has been copied here: ${dest}`);
   })
     .pipe(ws)
     .on("error", () => {
@@ -50,7 +50,7 @@ export const move = ([src, dest]) => {
   rs.on("close", () => {
     rm(src)
     .then(()=>{
-        console.log("file has been moved");
+        console.log(`file: ${parse(src).base} has been moved here: ${dest}`);
     })
     .catch(() => console.log(OPERATION_FAILED+NO_SUCH_FILE))
   })
@@ -60,18 +60,18 @@ export const move = ([src, dest]) => {
     });
 };
 
-export const renameFile = ([oldPath, newPath]) => {
-  try {
-    rename(oldPath, newPath);
-  } catch (err) {
-    console.log(err.message);
-  }
+export const renameFile = ([oldName, newName]) => {
+    rename(oldName, newName)
+        .then(() => {
+      console.log(`name of file: ${parse(oldName).base} has been changed`);
+    })
+    .catch(() => console.log(OPERATION_FAILED + NO_SUCH_FILE));
 };
 
 export const removeFile = (filename) => {
   rm(filename)
     .then(() => {
-      console.log(`file: ${filename} has been removed`);
+      console.log(`file: ${parse(filename).base} has been removed`);
     })
     .catch(() => console.log(OPERATION_FAILED + NO_SUCH_FILE));
 };

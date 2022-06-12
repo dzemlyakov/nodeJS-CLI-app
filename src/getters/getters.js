@@ -9,6 +9,7 @@ import {
   INVALID_INPUT,
   OPERATION_FAILED,
   NO_SUCH_COMMAND,
+  NO_SUCH_FILE
 } from "../errors/errors.js";
 
 export const getOSCommand = (command) => {
@@ -27,7 +28,7 @@ export const getOnePathCommand = (command, pathTo) => {
    
   return exists
     ? onePathCommandsObj[command](pathTo)
-    : console.log(OPERATION_FAILED);
+    : console.log(OPERATION_FAILED+NO_SUCH_FILE);
 };
 
 export const getTwoPathCommand = (command, paths) => {
@@ -35,7 +36,7 @@ export const getTwoPathCommand = (command, paths) => {
   if (existFolderOrFile(src) && existFolderOrFile(path.parse(dest).dir)) {
     return twoPathCommandsObj[command](paths);
   } else {
-    console.log(OPERATION_FAILED);
+    console.log(OPERATION_FAILED+NO_SUCH_FILE);
   }
 };
 

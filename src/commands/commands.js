@@ -3,6 +3,7 @@ import { read, create, removeFile, move, copy, renameFile } from "../functions/b
 import { calculateHash } from "../functions/hashCalc.js";
 
 import { EOL, arch, homedir, cpus, userInfo } from "os";
+import { compress, decompress } from "../functions/compressDecompress.js";
 
 export const allCommands = {
     "withoutArgs": ["up", "ls"],
@@ -31,7 +32,7 @@ export const onePathCommandsObj = {
 export const twoPathCommandsObj = {
   "rn":renameFile, 
   "cp": copy, 
-  "mv": move
-  //"compress", 
-  //"decompress"
+  "mv": move,
+  "compress": compress,
+  "decompress": decompress
 } 
