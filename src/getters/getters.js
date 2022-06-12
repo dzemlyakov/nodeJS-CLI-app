@@ -14,8 +14,8 @@ import {
 
 export const getOSCommand = (command) => {
   if (!Object.keys(osCommandsObj).includes(command))
-    return INVALID_INPUT + NO_SUCH_COMMAND;
-  return osCommandsObj[command];
+    return console.log(INVALID_INPUT + NO_SUCH_COMMAND);
+  return osCommandsObj[command]();
 };
 
 export const getOnePathCommand = (command, pathTo) => {

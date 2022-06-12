@@ -26,7 +26,7 @@ rl.on("line", async(answer) => {
   if (answer.startsWith(".exit")) rl.close();
   switch (inputHandler(answer)) {
     case "os":
-      console.log(argsHandlerForOs(answer));
+      argsHandlerForOs(answer);
       break;
     case "onePath":
       pathHandlerforOnePath(answer);

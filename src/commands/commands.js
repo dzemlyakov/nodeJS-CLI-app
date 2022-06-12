@@ -4,6 +4,7 @@ import { calculateHash } from "../functions/hashCalc.js";
 
 import { EOL, arch, homedir, cpus, userInfo } from "os";
 import { compress, decompress } from "../functions/compressDecompress.js";
+import { architecture, cpuInfo, Eol, homeDir, userName } from "../functions/OSOperations.js";
 
 export const allCommands = {
     "withoutArgs": ["up", "ls"],
@@ -13,11 +14,11 @@ export const allCommands = {
   };
 
 export const osCommandsObj = {
-    EOL: JSON.stringify(EOL),
-    cpus: cpus(),
-    homedir: homedir(),
-    architecture: arch(),
-    username: userInfo().username,
+    EOL: Eol,
+    cpus: cpuInfo,
+    homedir: homeDir,
+    architecture: architecture,
+    username: userName
   };  
 
 export const onePathCommandsObj = {

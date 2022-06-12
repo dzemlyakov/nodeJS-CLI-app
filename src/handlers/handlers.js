@@ -66,7 +66,7 @@ export const pathHandlerforTwoPath = (answerFromUser) => {
 export const argsHandlerForOs = (args) => {
   args = args.split(" ").slice(-1).join("");
   if (!args.startsWith("--")) {
-    return INVALID_INPUT;
+    return console.log(INVALID_INPUT); 
   } else {
     args = args.split("--").join("");
     return getOSCommand(args);
