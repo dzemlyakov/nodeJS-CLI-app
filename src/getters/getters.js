@@ -18,7 +18,13 @@ export const getOSCommand = (command) => {
 };
 
 export const getOnePathCommand = (command, pathTo) => {
-  const exists = existFolderOrFile(pathTo);
+  let exists
+  if (command.trim() === 'add') {
+    exists = existFolderOrFile(path.parse(pathTo).dir)
+  } else {
+     exists = existFolderOrFile(pathTo);
+  }
+   
   return exists
     ? onePathCommandsObj[command](pathTo)
     : console.log(OPERATION_FAILED);
