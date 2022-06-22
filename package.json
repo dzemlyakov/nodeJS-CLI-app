@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-cli-app",
+  "version": "1.0.0",
+  "description": "",
+  "type":"module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js --username=User"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dzemlyakov/nodeJS-CLI-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dzemlyakov/nodeJS-CLI-app/issues"
+  },
+  "homepage": "https://github.com/dzemlyakov/nodeJS-CLI-app#readme"
+}
