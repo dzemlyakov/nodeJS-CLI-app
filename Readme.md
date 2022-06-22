@@ -109,10 +109,10 @@ write down your name
     
     add some_file.txt or add /Users/username/Desktop/some_file.txt
 
-    (in the same folder) copy file.txt file2.txt 
-    or 
-    copy /Users/username/Desktop/file.txt  /Users/username/Desktop/someFolder/file.txt 
-
+    cp /Users/username/Desktop/file.txt  someFolder/ 
+    
+    mv /Users/username/Desktop/file.txt  someFolder/ 
+    
     (in the same folder) compress file.txt file.txt 
     or 
     compress /Users/username/Desktop/file.txt  /Users/username/Desktop/someFolder/file.txt 
