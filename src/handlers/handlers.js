@@ -2,7 +2,7 @@ import { chdir, cwd } from "process";
 import path from "path";
 
 import { list, up } from "../functions/nwd.js";
-import { getOSCommand, getOnePathCommand, getTwoPathCommand } from "../getters/getters.js";
+import { getOSCommand, getOnePathCommand, getTwoPathCommand, getWithoutArgsCommand } from "../getters/getters.js";
 import { allCommands } from "../commands/commands.js";
 import { INVALID_INPUT, OPERATION_FAILED } from "../errors/errors.js";
 
@@ -67,5 +67,10 @@ export const argsHandlerForOs = (args) => {
 };
 
 export const handlerWithoutArgs = async (answer) => {
-  return answer.trim() === "ls" ? list(cwd()) : up(cwd());
+console.log("🚀 ~ handlerWithoutArgs ~ answer", answer)
+  
+  return getWithoutArgsCommand(answer)
+  
+  
+  //return answer.trim() === "ls" ? list(cwd()) : up(cwd());
 };

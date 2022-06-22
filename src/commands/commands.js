@@ -1,4 +1,4 @@
-import { cd } from "../functions/nwd.js"
+import { cd, list, up } from "../functions/nwd.js"
 import { read, create, removeFile, move, copy, renameFile } from "../functions/basicFSOperations.js";
 import { calculateHash } from "../functions/hashCalc.js";
 import { compress, decompress } from "../functions/compressDecompress.js";
@@ -36,3 +36,7 @@ export const twoPathCommandsObj = {
   "compress": compress,
   "decompress": decompress
 } 
+export const withoutArgsCommandsObj = {
+  "ls": list,
+  "up": up
+}

@@ -1,9 +1,11 @@
 import { existsSync } from "fs";
 import path from "path";
+import { cwd } from "process";
 import {
   osCommandsObj,
   onePathCommandsObj,
   twoPathCommandsObj,
+  withoutArgsCommandsObj,
 } from "../commands/commands.js";
 import {
   INVALID_INPUT,
@@ -32,13 +34,21 @@ export const getOnePathCommand = (command, pathTo) => {
 };
 
 export const getTwoPathCommand = (command, paths) => {
-  let [src, dest] = paths;
+  let [src, dest = cwd()] = paths;
+  console.log("🚀 ~ getTwoPathCommand ~ dest", dest)
+  
+  
   if (existFolderOrFile(src) && existFolderOrFile(path.parse(dest).dir)) {
-    return twoPathCommandsObj[command](paths);
+    return twoPathCommandsObj[command](src, dest);
   } else {
     console.log(OPERATION_FAILED+NO_SUCH_FILE);
   }
 };
+export const getWithoutArgsCommand = (command)=>{
+  if (!Object.keys(withoutArgsCommandsObj).includes(command))
+  return console.log(INVALID_INPUT + NO_SUCH_COMMAND);
+return withoutArgsCommandsObj[command](cwd());
+}
 
 const existFolderOrFile = (pathToFile) => {
   return existsSync(pathToFile) ? true : false;

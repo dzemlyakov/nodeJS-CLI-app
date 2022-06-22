@@ -1,6 +1,6 @@
 import { createReadStream, createWriteStream } from "fs";
 import { rename, rm } from "fs/promises";
-import  { parse } from "path";
+import  path, { parse, join } from "path";
 import {
   OPERATION_FAILED,
   NO_SUCH_FILE,
@@ -30,52 +30,39 @@ export const create = (filename) => {
   ws.end();
 };
 
-export const copy = ([src, dest]) => {
+export const copy = async (src, dest) => {
+  let { base, name, ext } = parse(src)
+  let destPathWithName = join(dest, `${name}_copy${ext}`)
+    
   const rs = createReadStream(src);
-  const ws = createWriteStream(dest);
-
+  const ws = createWriteStream(destPathWithName);
+  
   rs.on("end", () => {
-    console.log(`file: ${parse(src).base} has been copied here: ${dest}`);
-    pwdForUser()
+    console.log(`file: ${base} has been copied here: ${dest}`);
   })
     .pipe(ws)
     .on("error", () => {
-      console.log(OPERATION_FAILED+NO_SUCH_FILE);
+      console.log(OPERATION_FAILED+NO_SUCH_FILE, '+++');
     });
 };
 
-export const move = ([src, dest]) => {
-  const rs = createReadStream(src);
-  const ws = createWriteStream(dest);
-
-  rs.on("close", () => {
-    rm(src)
-    .then(()=>{
-        console.log(`file: ${parse(src).base} has been moved here: ${dest}`);
-        pwdForUser()
-    })
-    .catch(() => console.log(OPERATION_FAILED+NO_SUCH_FILE))
-  })
-    .pipe(ws)
-    .on("error", () => {
-      console.log(OPERATION_FAILED);
-    });
+export const move = async (src, dest) => {
+ await copy(src,dest)
+ await removeFile(src)
 };
 
 export const renameFile = ([oldName, newName]) => {
     rename(oldName, newName)
         .then(() => {
       console.log(`name of file: ${parse(oldName).base} has been changed`);
-      pwdForUser()
     })
     .catch(() => console.log(OPERATION_FAILED + NO_SUCH_FILE));
 };
 
-export const removeFile = (filename) => {
+export const removeFile = async (filename) => {
   rm(filename)
     .then(() => {
       console.log(`file: ${parse(filename).base} has been removed`);
-      pwdForUser()
     })
     .catch(() => console.log(OPERATION_FAILED + NO_SUCH_FILE));
 };
